@@ -94,5 +94,5 @@ def split(y, per_class, seed):
     train = np.zeros(len(y), dtype=bool)
     for c in np.unique(y):
         idx = np.flatnonzero(y == c)
-        train[rng.permutation(idx)[:min(per_class, len(idx))]] = True
+        train[rng.permutation(idx)[:min(per_class, max(len(idx) - 2, 1))]] = True          # mindestens zwei unbekannte Kunden je Typ bleiben zur Prüfung übrig
     return train

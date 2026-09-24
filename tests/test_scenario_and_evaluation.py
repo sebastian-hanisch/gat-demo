@@ -43,6 +43,13 @@ def test_split_gives_exactly_per_class_known_labels():
     assert tr.sum() == 15 and all(tr[y == c].sum() == 5 for c in range(3)) and np.array_equal(tr, S.split(y, 5, 1))
 
 
+def test_split_leaves_unknown_customers_when_labels_exceed_the_class_size():
+    y = np.array([0] * 8 + [1] * 8 + [2] * 8)
+    tr = S.split(y, 20, 1)
+    assert all(tr[y == c].sum() == 6 for c in range(3)) and (~tr).sum() == 6
+    assert S.split(np.array([0, 0, 1]), 5, 1).sum() == 2
+
+
 def test_analyse_is_consistent():
     a = E.analyse(E.Settings(n=100, seed=3))
     assert a.gat.history["pred"].shape == (C.EPOCHS, 100) and a.gcn.history["pred"].shape == (C.EPOCHS, 100) and np.array_equal(a.gat.history["pred"][-1], a.pred_gat)
